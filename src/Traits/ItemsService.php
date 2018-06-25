@@ -25,6 +25,8 @@ trait ItemsService
      * Условия фильтрации по умолчанию
      *
      * @param Builder $query
+     * @param Request $request
+     *
      * @return Builder
      */
     public function baseQueryFilter($query, Request $request)
