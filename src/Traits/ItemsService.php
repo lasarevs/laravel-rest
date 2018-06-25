@@ -48,7 +48,7 @@ trait ItemsService
         $query = $this->isModelUseFilter() ? $model::setFilterAndRelationsAndSort($request, $params) : new $model;
         $query = $this->baseQueryFilter($query);
 
-        $relations = $this->getRelations();
+        $relations = $this->getRelations('list');
         if (!empty($relations)) {
             $query = $query->with($relations);
         }
@@ -109,18 +109,35 @@ trait ItemsService
     /**
      * Получить список связей из expand
      *
+     * @param string $type
      * @param Request $request
+     *
      * @return array
      */
     public function getRelations(Request $request = null)
     {
-        $relations = $this->relations;
+        $action = $this->getActionName();
+        if (is_array(array_values($this->relations)[0] ?? null) && in_array($action, array_keys($this->relations))) {
+            $relations = $this->relations[$action];
+        } else {
+            $relations = $this->relations;
+        }
 
         if ($request && $request->get('expand')) {
             $relations = array_merge($relations, explode(',', $request->get('expand')));
         }
 
         return $relations;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActionName()
+    {
+        list(, $action) = explode('@', \Route::getCurrentRoute()->getActionName());
+
+        return $action;
     }
 
     /**
