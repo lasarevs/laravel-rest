@@ -49,7 +49,7 @@ trait ItemsService
 
         $relations = $this->getRelations();
         if (!empty($relations)) {
-            $query->with($relations);
+            $query = $query->with($relations);
         }
 
         $items = $query->paginate($this->getPaginate($request));
@@ -78,14 +78,15 @@ trait ItemsService
         // небольшой костыль
         try {
             $query = $this->isModelUseFilter() ?
-            $modelClass::setFilterAndRelationsAndSort($request, $params) :
-            new $modelClass;
+                $modelClass::setFilterAndRelationsAndSort($request, $params) :
+                new $modelClass;
 
             $query = $this->baseQueryFilter($query);
 
             $relations = $this->getRelations();
+
             if (!empty($relations)) {
-                $query->with($relations);
+                $query = $query->with($relations);
             }
 
             $model = $query->findOrFail($id);
@@ -113,7 +114,7 @@ trait ItemsService
         $relations = $this->relations;
 
         if ($request && $request->get('expand')) {
-            $relations = explode(',', $request->get('expand'));
+            $relations = array_merge($relations, explode(',', $request->get('expand')));
         }
 
         return $relations;
