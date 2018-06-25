@@ -55,6 +55,8 @@ trait ItemsService
 
         $items = $query->paginate($this->getPaginate($request));
 
+        $items->appends($request->all());
+
         $collection = $items->toArray();
 
         if ($this->transformer) {
