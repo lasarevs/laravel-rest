@@ -110,7 +110,7 @@ trait ItemsService
      */
     public function getRelations(Request $request = null)
     {
-        $relations = [];
+        $relations = $this->relations;
 
         if ($request && $request->get('expand')) {
             $relations = explode(',', $request->get('expand'));

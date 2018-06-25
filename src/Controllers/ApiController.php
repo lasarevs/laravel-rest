@@ -57,6 +57,11 @@ class ApiController extends Controller
     protected $transformer;
 
     /**
+     * @var array
+     */
+    protected $relations = [];
+
+    /**
      * получить нужный объект Request для данного действия и контроллера
      *
      * @return string|bool
