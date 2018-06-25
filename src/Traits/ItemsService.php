@@ -48,7 +48,7 @@ trait ItemsService
         $query = $this->isModelUseFilter() ? $model::setFilterAndRelationsAndSort($request, $params) : new $model;
         $query = $this->baseQueryFilter($query);
 
-        $relations = $this->getRelations('list');
+        $relations = $this->getRelations();
         if (!empty($relations)) {
             $query = $query->with($relations);
         }
