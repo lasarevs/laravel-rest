@@ -43,6 +43,8 @@ trait ItemsService
      */
     public function getItems(Request $request = null, $params = [], $paginate = true)
     {
+        $action = ucfirst($this->getActionName());
+
         $model = $this->modelClass;
 
         $query = $this->isModelUseFilter() ? $model::setFilterAndRelationsAndSort($request, $params) : new $model;
@@ -59,8 +61,9 @@ trait ItemsService
         if ($this->transformer) {
             $collection = ($this->transformer)::collection($items);
 
-            if (method_exists($this, 'getAdditional')) {
-                $collection = $collection->additional($this->getAdditional($request));
+            $methodName = 'getAdditional' . $action;
+            if (method_exists($this, $methodName)) {
+                $collection = $collection->additional($this->{$methodName}($request));
             }
         } else {
             $collection = $items->toArray();
@@ -77,6 +80,8 @@ trait ItemsService
      */
     public function getItem($id, Request $request = null, $params = [], $needTransform = true)
     {
+        $action = ucfirst($this->getActionName());
+
         $modelClass = $this->modelClass;
 
         // небольшой костыль
@@ -99,9 +104,14 @@ trait ItemsService
         }
 
         if ($needTransform && $this->transformer) {
-            $data = new $this->transformer($model);
+            $data = ['data' => new $this->transformer($model)];
+
+            $methodName = 'getAdditional' . $action;
+            if (method_exists($this, $methodName)) {
+                $data = array_merge($data, $this->{$methodName}($request));
+            }
         } else {
-            $data = $model;
+            $data = ['data' => $model];
         }
 
         return $data;
