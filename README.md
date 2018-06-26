@@ -14,7 +14,7 @@ or add in **composer.json** record to require block **require**:
 For Laravel >=5.6
 ```
 ```json
-"lasarevs/laravel-rest": "*"
+"lasarevs/laravel-rest": "dev-master"
 ```
 
 ## Using
@@ -26,12 +26,12 @@ In Lasarevs\LaravelRest\Traits\Actions\* isset CRUD operations for controller
 You need to set $modelClass variable in controller and using action traits
 
 ```php
-    class SomeController
-    {
-        use IndexAction, ShowAction, StoreAction, UpdateAction, DestroyAction;
-    
-        protected $modelClass = SomeModel::class;    
-    }
+class SomeController
+{
+    use IndexAction, ShowAction, StoreAction, UpdateAction, DestroyAction;
+
+    protected $modelClass = SomeModel::class;    
+}
 ```
 
 If any of the methods that do not need it, just remove it
@@ -43,18 +43,15 @@ If you need all action, use GeneralActions
 if you need filtering data by default conditions, use baseQueryFilter method on you controller:
 
 ```php
-    public function baseQueryFilter($query)
-    {
-        return $query->where('owner', Auth::user()->id);
-    }
+public function baseQueryFilter($query)
+{
+    return $query->where('owner', Auth::user()->id);
+}
 ```
-
 
 ## default paginate
 
 ItemService trait have static variable $defaultPaginate. You will change it in your controllers  
-
-
 
 ## Filter using
 
