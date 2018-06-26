@@ -1,6 +1,7 @@
 <?php
 namespace Lasarevs\LaravelRest\Controllers;
 
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Lasarevs\LaravelRest\Traits\ItemsService;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Database\Eloquent\Model;
@@ -166,6 +167,9 @@ class ApiController extends Controller
      */
     public function respond($data, $headers = [])
     {
+        if ($data instanceof ResourceCollection) {
+            return $data->toResponse(\request());
+        }
         return response($data, $this->getStatusCode(), $headers);
     }
 

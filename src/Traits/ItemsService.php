@@ -54,15 +54,16 @@ trait ItemsService
         }
 
         $items = $query->paginate($this->getPaginate($request));
-
         $items->appends($request->all());
 
-        $collection = $items->toArray();
-
         if ($this->transformer) {
-            $collection['data'] = ($this->transformer)::collection($items);
+            $collection = ($this->transformer)::collection($items);
+
+            if (method_exists($this, 'getAdditional')) {
+                $collection = $collection->additional($this->getAdditional($request));
+            }
         } else {
-            $collection['data'] = $items->items();
+            $collection = $items->toArray();
         }
 
         return $collection;
