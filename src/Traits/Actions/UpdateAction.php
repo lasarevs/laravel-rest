@@ -22,7 +22,7 @@ trait UpdateAction
     {
         $request = $this->getRequestObject();
 
-        $model = $this->getItem($id, $request, [], false);
+        $model = $this->getItem($id, $request, [], false)['data'];
         if (!$model) {
             return $this->respondNotFound();
         }
