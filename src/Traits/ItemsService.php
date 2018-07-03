@@ -114,7 +114,7 @@ trait ItemsService
             $data = ['data' => $model];
         }
 
-        if (in_array($action, ['update', 'destroy'])) {
+        if (in_array($this->getActionName(), ['update', 'destroy'])) {
             return $data['data'];
         }
 
