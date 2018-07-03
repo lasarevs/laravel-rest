@@ -105,13 +105,13 @@ trait ItemsService
 
         if ($needTransform && $this->transformer) {
             $data = ['data' => new $this->transformer($model)];
-
-            $methodName = 'getAdditional' . $action;
-            if (method_exists($this, $methodName)) {
-                $data = array_merge($data, $this->{$methodName}($request));
-            }
         } else {
             $data = ['data' => $model];
+        }
+
+        $methodName = 'getAdditional' . $action;
+        if (method_exists($this, $methodName)) {
+            $data = array_merge($data, $this->{$methodName}($request));
         }
 
         if (in_array($this->getActionName(), ['update', 'destroy'])) {
