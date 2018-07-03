@@ -76,7 +76,6 @@ trait ItemsService
      * Получение сущностей
      *
      * @param $id
-     * @return bool
      */
     public function getItem($id, Request $request = null, $params = [], $needTransform = true)
     {
@@ -96,9 +95,10 @@ trait ItemsService
 
             if (!empty($relations)) {
                 $query = $query->with($relations);
+                $model = $query->findOrFail($id);
+            } else {
+                $model = $modelClass::findOrFail($id);
             }
-
-            $model = $query->findOrFail($id);
         } catch (ModelNotFoundException $e) {
             return false;
         }
@@ -112,6 +112,10 @@ trait ItemsService
             }
         } else {
             $data = ['data' => $model];
+        }
+
+        if (in_array($action, ['update', 'destroy'])) {
+            return $data['data'];
         }
 
         return $data;
@@ -128,6 +132,11 @@ trait ItemsService
     public function getRelations(Request $request = null)
     {
         $action = $this->getActionName();
+
+        if (in_array($action, ['update', 'destroy'])) {
+            return [];
+        }
+
         if (is_array(array_values($this->relations)[0] ?? null) && in_array($action, array_keys($this->relations))) {
             $relations = $this->relations[$action];
         } else {
